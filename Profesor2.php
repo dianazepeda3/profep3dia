@@ -3,7 +3,7 @@
 <?php 
 //$idR = $_GET['idR'];
 $user = $_GET['user'];
-$an = "Anonimo";
+$an = "Anónimo";
 $idP=$_GET['profesor'];
 if (isset($_POST['profesor'])) {
 
@@ -27,40 +27,42 @@ if (isset($_POST['profesor'])) {
 	if($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['like'])){
 		$idR = $_GET['idR'];
 		$query = "SELECT * FROM reseña WHERE id_reseña = $idR";
-		$result = pg_query($conexion, $query);
+		$result = $conexion->query($query);
 
-		$row=pg_fetch_assoc($result);
+		$row=$result->fetch_assoc();
 		$likes = $row['likes'] ;
 		$likes = $likes + 1;
 
 		$uname = $_GET['profesor'];
 		$user = $_GET['user'];
 		$query = "UPDATE reseña SET likes = $likes WHERE id_reseña = $idR";
-		$result = pg_query($conexion, $query);
+		$result = $conexion->query($query);
 
 		$query = "INSERT INTO boton (username, id_reseña) VALUES('$user',$idR)";
-		pg_query($conexion, $query);
+		$conexion->query($query);
 		//header("Location: Profesor2.php?profesor=$idP&user=$user");
+		?><meta http-equiv="refresh" content="0;url=Profesor2.php?profesor=<?php echo $idP?>&user=<?php echo $user?>"> <?php
 	}
 
 	if($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['dislike'])){
     	
 		$idR = $_GET['idR'];
 		$query = "SELECT * FROM reseña WHERE id_reseña = $idR";
-		$result = pg_query($conexion, $query);
+		$result = $conexion->query($query);
 
-		$row=pg_fetch_assoc($result);
+		$row=$result->fetch_assoc();
 		$dislikes = $row['dislikes'] ;
 		$dislikes = $dislikes + 1;
 
 		$uname = $_GET['profesor'];
 		$user = $_GET['user'];
 		$query = "UPDATE reseña SET dislikes = $dislikes WHERE id_reseña = $idR";
-		$result = pg_query($conexion, $query);
+		$result = $conexion->query($query);
 
 		$query = "INSERT INTO boton (username, id_reseña) VALUES('$user',$idR)";
-		pg_query($conexion, $query);
+		$conexion->query($query);
 		//header("Location: Profesor2.php?profesor=$idP&user=$user");
+		?><meta http-equiv="refresh" content="0;url=Profesor2.php?profesor=<?php echo $idP?>&user=<?php echo $user?>"> <?php
 	}
 
 	?>
@@ -148,7 +150,7 @@ if (isset($_POST['profesor'])) {
 			
 			<div class="row">
 				<div class="col-sm-3 col-xs-12">
-					<div id="gtco-logo"><!--<a href="index.html">!-->Buscar Profesor<em></em></div>
+					<div id="gtco-logo"><b><a href="Busqueda2.php?user=<?php echo $user?>" style="font-size: 22px">Buscar Profesor<em></em></a></b></div>
 				</div>
         
 				<div class="col-xs-9 text-right menu-1">
@@ -159,7 +161,7 @@ if (isset($_POST['profesor'])) {
 					</form>
 					</div>                            
 					<ul>
-						<li class="btn-cta" ><a href="index.php"><span>CERRAR SESION</span></a></li>
+						<li class="btn-cta" ><a href="index.php"><span>Cerrar Sesión</span></a></li>
 					</ul>	
 				</div>
 			</div>
@@ -180,8 +182,8 @@ if (isset($_POST['profesor'])) {
 							  <?php
 								include("conexion.php");
 								
-								$product = pg_query($conexion, "SELECT * FROM maestro where id_maestro = $uname");
-								$row=pg_fetch_assoc($product)
+								$product = $conexion->query("SELECT * FROM maestro where id_maestro = $uname");
+								$row=$product->fetch_assoc()
 								 
 							?>
                 				<!--<h2 style=" color:white">MICHEL DAVALOS BOITES</h2>-->
@@ -208,8 +210,8 @@ if (isset($_POST['profesor'])) {
 							//$resultado = $conn->query($query);
 							//<?php $nombres = pg_query($conexion, "SELECT nombre FROM alumno WHERE nombre = 'Diana'");
 		
-							$product = pg_query($conexion, "SELECT * FROM reseña where id_maestro = $uname order by likes desc");
-							while($row=pg_fetch_assoc($product)){
+							$product = $conexion->query("SELECT * FROM reseña where id_maestro = $uname order by likes desc, dislikes asc");
+							while($row=$product->fetch_assoc()){
 								$idR = $row['id_reseña'] ;
 								$user = $_GET['user'];
 							//$row2 = $resultado->fetch_assoc()
@@ -228,14 +230,14 @@ if (isset($_POST['profesor'])) {
 									<div style="float: right; width: 20%"><h2>Likes: <?php echo $row['likes'] ?> 
 									&nbsp;&nbsp;Dislikes: <?php echo $row['dislikes'] ?> </h2></div>
 									<div style="float: right; width: 100%"><h2>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $row['clave_materia'] ?></h2></div>
-									<div style="float: right; width: 100%"><h2>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $row['comentario'] ?></h2></div>
+									<div style="float: right; width: 95%"><h2>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $row['comentario'] ?></h2></div>
 									<!--<p><span class="price cursive-font"><?php //echo $row['calificacion_promedio'] ?>%</span></p>-->
 									
 								</div>
 								<?php
 								
-								$result = pg_query($conexion, "SELECT * FROM boton where username='$user' and id_reseña=$idR");
-									if(pg_num_rows($result) == 0){
+								$result = $conexion->query("SELECT * FROM boton where username='$user' and id_reseña=$idR");
+									if(mysqli_num_rows($result) == 0){
 									//	echo $an;}?>
 									<form action = "Profesor2.php?profesor=<?php echo $idP ?>&user=<?php echo $user?>&idR=<?php echo $idR?>"  method="post">
 										<button  type="submit" name="like"  class="" style="float: left; background-color: #1F618D; border-color: #1F618D ; color:white; font-size: 16px; width: 12%;">Like</button>
@@ -258,7 +260,7 @@ if (isset($_POST['profesor'])) {
 
 
 
-	<footer id="gtco-footer" role="contentinfo" data-stellar-background-ratio="0.5">*\
+	<footer id="gtco-footer" role="contentinfo" data-stellar-background-ratio="0.5">
 		<div class="overlay"></div>
 		<div class="gtco-container">
 			<div class="row row-pb-md">
@@ -266,14 +268,13 @@ if (isset($_POST['profesor'])) {
 					<div class="gtco-widget">
 						<h3>SOPORTE</h3>
 						<ul class="gtco-quick-contact">
-							<li><a href="#"><i class="icon-phone"></i> +52 3313149161</a></li>
-							<li><a href="#"><i class="icon-mail2"></i> soporte.profepedia@gmail.com</a></li>
+							<li><a><i class="icon-mail2"></i> soporte.profepedia@gmail.com</a></li>
 						</ul>
 					</div>
 					<div class="gtco-widget">
 						<h3>Get Social</h3>
 						<ul class="gtco-social-icons">
-							<li><a href="#"><i class="icon-facebook"></i></a></li>
+							<li><a href="https://www.facebook.com/Profep3dia-101972772325777/" target="_blank"><i class="icon-facebook"></i> Profep3dia</a></li>
 						</ul>
 					</div>
 				</div>

@@ -104,12 +104,12 @@ if (isset($_POST['profe'])) {
 			
 			<div class="row">
 				<div class="col-sm-3 col-xs-12">
-					<div id="gtco-logo"><!--<a href="index.html">!-->Buscar Profesor<em></em></div>
+					<div id="gtco-logo"><b><a href="Busqueda2.php?user=<?php echo $user?>" style="font-size: 22px">Buscar Profesor<em></em></a></b></div>
 				</div>
         
 				<div class="col-xs-9 text-right menu-1">
           <div class id="barra_busqueda">
-		  <?php$username=$_GET['user'];?>
+		  
               	  <form action="Busqueda2.php?user=<?php echo $user?>" method="post">
 						<input type="text" name="profe" REQUIRED class="" id="Busqueda" size="60" maxlength="50" style="float: left; background-color:white; color:Black;">
 						<button  type="submit"  class="" style="float: left; background-color: #FF6900; border-color: #FF6900 ; color:white; font-size: 16px; width: 12%;">Buscar</button>
@@ -117,7 +117,7 @@ if (isset($_POST['profe'])) {
 				  </div>
                     
 					<ul>
-						<li class="btn-cta" ><a href="index.php"><span>CERRAR SESION</span></a></li>
+						<li class="btn-cta" ><a href="index.php"><span>Cerrar Sesion</span></a></li>
 					</ul>	
 				</div>
 			</div>
@@ -138,13 +138,15 @@ if (isset($_POST['profe'])) {
 
 							
 							if(empty($uname)){
-								$product = pg_query($conexion, "SELECT * FROM maestro");
+								$product = $conexion->query("SELECT * FROM maestro order by calificacion_promedio  desc limit 15") ;
 							}else{
-								$product = pg_query($conexion, "SELECT * FROM maestro where nombre like '%$uname%' or apellidos like '%$uname%' order by nombre asc");
+								$product = $conexion->query("SELECT * FROM maestro where nombre like '%$uname%' or apellidos like '%$uname%' or concat(nombre,' ',apellidos) like '%$uname%' order by nombre asc");
+								$var = false;
 							}
 							
-							while($row=pg_fetch_assoc($product)){
+							while($row=$product->fetch_assoc()){
 							//$row2 = $resultado->fetch_assoc()
+							$var = true;
                             $idP = $row['id_maestro'];
 						?>
 						<div class="col-lg-4 col-md-4 col-sm-6">
@@ -163,6 +165,12 @@ if (isset($_POST['profe'])) {
 						</div>
 						<?php
 							}
+							if($var == false){
+							        ?>
+							        <center><h1>NO EXISTEN COINCIDENCIAS
+							        <img src="images/bola4.png" height="70%"></h1>
+							        </center><?php
+							    }
 						?>
 					</div>	
 				</div>
@@ -171,26 +179,21 @@ if (isset($_POST['profe'])) {
 	</header>
 
     
-	<footer id="gtco-footer" role="contentinfo" data-stellar-background-ratio="0.5">*\
+	<footer id="gtco-footer" role="contentinfo" data-stellar-background-ratio="0.5">
 		<div class="overlay"></div>
 		<div class="gtco-container">
 			<div class="row row-pb-md">
-
-				
-
-				
 				<div class="col-md-12 text-center">
 					<div class="gtco-widget">
 						<h3>SOPORTE</h3>
 						<ul class="gtco-quick-contact">
-							<li><a href="#"><i class="icon-phone"></i> +52 3313149161</a></li>
-							<li><a href="#"><i class="icon-mail2"></i> soporte.profepedia@gmail.com</a></li>
+							<li><a><i class="icon-mail2"></i> soporte.profepedia@gmail.com</a></li>
 						</ul>
 					</div>
 					<div class="gtco-widget">
 						<h3>Get Social</h3>
 						<ul class="gtco-social-icons">
-							<li><a href="#"><i class="icon-facebook"></i></a></li>
+							<li><a href="https://www.facebook.com/Profep3dia-101972772325777/" target="_blank"><i class="icon-facebook"></i> Profep3dia</a></li>
 						</ul>
 					</div>
 				</div>

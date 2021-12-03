@@ -1,24 +1,13 @@
 <!DOCTYPE php>
 
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 	include("conexion.php");
-	$mensaje = false;
-	if(isset($_POST['submit'])&&!empty($_POST['submit'])){
-    
-		$user=$_POST["user"];
-		$pass=$_POST["pass"];
-		
-		$query = "SELECT * FROM alumno WHERE username='$user' AND contrasena='$pass'";
-		$res = pg_query($conexion, $query);
-		$cant=pg_num_rows($res);
-		if($cant == 1){ 
-			header("Location: Busqueda2.php?user=$user");  
-			$mensaje = false;
-		}else{
-			//header("Location: index.php?#Datos incorrectos");
-			//echo "<center><label>Contraseña</label></center>";
-			$mensaje = true;
-		}
+	$ms = 0;
+	if(isset($_GET['ms'])){
+	    $ms = $_GET['ms'];
 	}
 
 	?>
@@ -104,7 +93,7 @@
 		<div class="gtco-container">
 			<div class="row">
 				<div class="col-sm-3 col-xs-12">
-					<div id="gtco-logo"><!--<a href="index.html">!-->Buscar Profesor<em></em></div>
+					<div id="gtco-logo"><b><a href="Busqueda.php" style="font-size: 22px">Buscar Profesor<em></em></a></b></div>
 				</div>
         
 				<div class="col-xs-9 text-right menu-1">
@@ -142,12 +131,13 @@
 										<div class="tab-content-inner active" data-content="signup">
 											<center><h3 class="center">Inicio de Sesión</h3></center>
 												<?php 
-												if($mensaje == true){ ?>
+												//if($mensaje == true){
+												if($ms == 1){?>
 													<center><label style="color:red">Username o contraseña incorrecta</label></center>
 												<?php
 												}
 												?>
-											<form  method="POST">
+											<form action=login.php  method="POST">
 												<div class="row form-group">
 													<div class="col-md-12">
 														<label for="">Username</label>
@@ -163,7 +153,7 @@
 
 												<div class="row form-group">
 													<div class="col-md-12">
-														<input type="submit"  name="submit" class="btn btn-primary btn-block" value = "Ingresar">
+														<input type="submit" name="submit" class="btn btn-primary btn-block" value = "Ingresar">
 													</div>
 												</div>										
 											</form>	
@@ -180,7 +170,7 @@
 
 
 
-	<footer id="gtco-footer" role="contentinfo" data-stellar-background-ratio="0.5">*\
+	<footer id="gtco-footer" role="contentinfo" data-stellar-background-ratio="0.5">
 		<div class="overlay"></div>
 		<div class="gtco-container">
 			<div class="row row-pb-md">
@@ -192,14 +182,13 @@
 					<div class="gtco-widget">
 						<h3>SOPORTE</h3>
 						<ul class="gtco-quick-contact">
-							<li><a href="#"><i class="icon-phone"></i> +52 3313149161</a></li>
-							<li><a href="#"><i class="icon-mail2"></i> soporte.profepedia@gmail.com</a></li>
+							<li><a><i class="icon-mail2"></i>soporte.profepedia@gmail.com</a></li>
 						</ul>
 					</div>
 					<div class="gtco-widget">
 						<h3>Get Social</h3>
 						<ul class="gtco-social-icons">
-							<li><a href="#"><i class="icon-facebook"></i></a></li>
+							<li><a href="https://www.facebook.com/Profep3dia-101972772325777/" target="_blank"><i class="icon-facebook"></i> Profep3dia</a></li>
 						</ul>
 					</div>
 				</div>

@@ -5,6 +5,7 @@
 	$userep = false;
 	$validarcorreo = false;
 	$valcorreo = false;
+	$correorep = false;
 	if(isset($_POST['submit'])&&!empty($_POST['submit'])){
     
 		$nombre=$_POST["nombre"];
@@ -17,17 +18,27 @@
 
 		if($pass == $pass2){
 			$query = "SELECT * FROM alumno WHERE username='$user'";
-			$res = pg_query($conexion, $query);
-			$cant=pg_num_rows($res);
+			//$res = pg_query($conexion, $query);
+			$res=$conexion->query($query);
+			$cant=mysqli_num_rows($res);
+			$query = "SELECT * FROM alumno WHERE correo='$correo'";
+			//$res = pg_query($conexion, $query);
+			$res=$conexion->query($query);
+			$cant2=mysqli_num_rows($res);
 			if($cant == 0){
-				$validarcorreo = filter_var($correo, FILTER_VALIDATE_EMAIL);
-				if($validarcorreo){
-					$query = "INSERT INTO alumno VALUES ('$user','$nombre','$apellidos','$correo','$pass','$carrera')";
-					pg_query($conexion, $query);
-					header("Location: index.php"); 
-				}else{
-					$valcorreo = true;
-				}
+			    if($cant2 == 0){
+    				$validarcorreo = filter_var($correo, FILTER_VALIDATE_EMAIL);
+    				if($validarcorreo){
+    					$query = "INSERT INTO alumno VALUES ('$user','$nombre','$apellidos','$correo','$pass','$carrera')";
+    					//pg_query($conexion, $query);
+    					$conexion->query($query);
+    					?><meta http-equiv="refresh" content="0;url=index.php"> <?php
+    				}else{
+    					$valcorreo = true;
+    				}
+			    }else{
+			        $correorep = true;
+			    }
 			}else{
 				$userep = true;
 			}
@@ -122,7 +133,7 @@
 			
 			<div class="row">
 				<div class="col-sm-3 col-xs-12">
-					<div id="gtco-logo"><!--<a href="index.html">!-->Buscar Profesor<em></em></div>
+					<div id="gtco-logo"><b><a href="Busqueda.php" style="font-size: 22px">Buscar Profesor<em></em></a></b></div>
 				</div>
         
 				<div class="col-xs-9 text-right menu-1">
@@ -144,8 +155,7 @@
 	</nav>
 	<header id="gtco-header" class="gtco-cover gtco-cover-md" role="banner" style="background-image: url(images/backgroundCentrado.jpg)" data-stellar-background-ratio="0.5">
 		<div class="overlay"></div>
-		<div 
-class="gtco-container">
+		<div class="gtco-container">
 			<div class="row">
 				<div class="col-md-15 colmd-offset-0 text-left">
 					
@@ -168,14 +178,18 @@ class="gtco-container">
 															<center><label style="color:red">El correo no es valido</label></center>
 														<?php
 														}
+														if($correorep == true){ ?>
+															<center><label style="color:red">Correo ya registrado</label></center>
+														<?php
+														}
 														?>
 													<div class="col-md-6">
 														<label for="date-start">Nombre</label>
-														<input type="text" id="nombre" name="nombre" REQUIRED class="form-control">
+														<input type="text" maxlength="20" id="nombre" name="nombre" REQUIRED class="form-control">
 													</div>
                           							<div class="col-md-6">
 														<label for="date-start">Apellidos</label>
-														<input type="text" id="apellidos" name="apellidos" REQUIRED class="form-control">
+														<input type="text" maxlength="40" id="apellidos" name="apellidos" REQUIRED class="form-control">
 													</div>
 												</div>
                         						<div class="row form-group">
@@ -186,20 +200,62 @@ class="gtco-container">
 															<option value="INCO" style="color:Black">INCO</option>
 															<option value="INNI" style="color:Black">INNI</option>
 															<option value="ICOM" style="color:Black">ICOM</option>
-															<option value="Otra" style="color:Black">Otra</option>
+															<option value="TOP" style="color:Black">TOP</option>
+                                                            <option value="MEL" style="color:Black">MEL</option>
+                                                            <option value="MIET" style="color:Black">MIET</option>
+                                                            <option value="MIPF" style="color:Black">MIPF</option>
+                                                            <option value="MIQI" style="color:Black">MIQI</option>
+                                                            <option value="DUPR" style="color:Black">DUPR</option>
+                                                            <option value="MILI" style="color:Black">MILI</option>
+                                                            <option value="MITE" style="color:Black">MITE</option>
+                                                            <option value="MIMC" style="color:Black">MIMC</option>
+                                                            <option value="QFB" style="color:Black">QFB</option>
+                                                            <option value="IND" style="color:Black">IND</option>
+                                                            <option value="MCM" style="color:Black">MCM</option>
+                                                            <option value="DCM" style="color:Black">DCM</option>
+                                                            <option value="DDCM" style="color:Black">DDCM</option>
+                                                            <option value="PEL" style="color:Black">PEL</option>
+                                                            <option value="MICQ" style="color:Black">MICQ</option>
+                                                            <option value="IIE" style="color:Black">IIE</option>
+                                                            <option value="MIEC" style="color:Black">MIEC</option>
+                                                            <option value="QUI" style="color:Black">QUI</option>
+                                                            <option value="ICT" style="color:Black">ICT</option>
+                                                            <option value="MIPR" style="color:Black">MIPR</option>
+                                                            <option value="DCPB" style="color:Black">DCPB</option>
+                                                            <option value="MIHD" style="color:Black">MIHD</option>
+                                                            <option value="CIV" style="color:Black">CIV</option>
+                                                            <option value="RMEM" style="color:Black">RMEM</option>
+                                                            <option value="MIFI" style="color:Black">MIFI</option>
+                                                            <option value="CEL" style="color:Black">CEL</option>
+                                                            <option value="IQU" style="color:Black">IQU</option>
+                                                            <option value="IIP" style="color:Black">IIP</option>
+                                                            <option value="IPF" style="color:Black">IPF</option>
+                                                            <option value="XVA" style="color:Black">XVA</option>
+                                                            <option value="ICI" style="color:Black">ICI</option>
+                                                            <option value="PIP" style="color:Black">PIP</option>
+                                                            <option value="PIN" style="color:Black">PIN</option>
+                                                            <option value="PRC" style="color:Black">PRC</option>
+                                                            <option value="DVIT" style="color:Black">DVIT</option>
+                                                            <option value="MIPB" style="color:Black">MIPB</option>
+                                                            <option value="MIIG" style="color:Black">MIIG</option>
+                                                            <option value="PME" style="color:Black">PME</option>
+                                                            <option value="XEF" style="color:Black">XEF</option>
+                                                            <option value="MIFM" style="color:Black">MIFM</option>
+                                                            <option value="MIQC" style="color:Black">MIQC</option>
+                                                            <option value="DUCF" style="color:Black">DUCF</option>
 															
 														</select>
 													</div>
 													
                          							 <div class="col-md-6">
 														<label for="date-start">Username</label>
-														<input type="text" id="user" name="user" REQUIRED class="form-control">
+														<input type="text" minlength="5" maxlength="20" id="user" name="user" REQUIRED class="form-control">
 													</div>
 												</div>
 												<div class="row form-group">
 													<div class="col-md-12">
-														<label for="date-start">Correo Institucional</label>
-														<input type="text" id="correo" name="correo" REQUIRED class="form-control">
+														<label for="date-start">Correo</label>
+														<input type="text" maxlength="40" id="correo" name="correo" REQUIRED class="form-control">
 													</div> 
 												</div>
                         						<div class="row form-group">
@@ -211,17 +267,20 @@ class="gtco-container">
 														?>
 													<div class="col-md-6">
 														<label for="date-start">Contraseña</label>
-                            							<input type="password" id="pass" name="pass" REQUIRED class="form-control">
+                            							<input type="password" minlength="7" maxlength="10" id="pass" name="pass" REQUIRED class="form-control">
 													</div>
                           							<div class="col-md-6">
 														<label for="date-start">Confirmar contraseña</label>
-                            							<input type="password" id="pass2" name="pass2" REQUIRED class="form-control">
+                            							<input type="password" minlength="7" maxlength="10" id="pass2" name="pass2" REQUIRED class="form-control">
+													</div>
+													<div class="col-md-6">
+													<label><input type="checkbox" required id="cbox1" value="first_checkbox"> Acepto <a href="TerminosCondiciones.txt" target="_blank">Términos y Condiciones</a></label><br>
 													</div>
 												</div>
 
 												<div class="row form-group">
 													<div class="col-md-12">
-														<input type="submit" name="submit" class="btn btn-primary btn-block" value="Confirmar"></span></a>
+														<input type="submit" name="submit" class="btn btn-primary btn-block" value="Registrar"></span></a>
 													</div>
 												</div>
 											</form>	
@@ -238,7 +297,7 @@ class="gtco-container">
 
 
 
-	<footer id="gtco-footer" role="contentinfo" data-stellar-background-ratio="0.5">*\
+	<footer id="gtco-footer" role="contentinfo" data-stellar-background-ratio="0.5">
 		<div class="overlay"></div>
 		<div class="gtco-container">
 			<div class="row row-pb-md">
@@ -250,14 +309,13 @@ class="gtco-container">
 					<div class="gtco-widget">
 						<h3>SOPORTE</h3>
 						<ul class="gtco-quick-contact">
-							<li><a href="#"><i class="icon-phone"></i> +52 3313149161</a></li>
-							<li><a href="#"><i class="icon-mail2"></i> soporte.profepedia@gmail.com</a></li>
+							<li><a><i class="icon-mail2"></i> soporte.profepedia@gmail.com</a></li>
 						</ul>
 					</div>
 					<div class="gtco-widget">
 						<h3>Get Social</h3>
 						<ul class="gtco-social-icons">
-							<li><a href="#"><i class="icon-facebook"></i></a></li>
+							<li><a href="https://www.facebook.com/Profep3dia-101972772325777/" target="_blank"><i class="icon-facebook"></i> Profep3dia</a></li>
 						</ul>
 					</div>
 				</div>
